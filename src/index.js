@@ -48,7 +48,7 @@ function displayCurrentHumidity(response) {
 function displayCurrentWind(response) {
   let wind = Math.round(response.data.wind.speed);
   let windToday = document.querySelector("#wind-today");
-  windToday.innerHTML = `${wind} km/s`;
+  windToday.innerHTML = `${wind} m/s`;
 }
 ///Time Right Now
 function setTimeNow() {
