@@ -103,11 +103,9 @@ let apiKey = "d0374efc7dd8f24099f54d563eb3c31c";
 setTodayData();
 ////////////////////////////////////////////////////////////////////////////////
 ////click buttons
-let cityButtons = document.querySelector("#city-buttons");
-cityButtons.addEventListener("click", discernButton);
+discernButton();
 
-function discernButton(event) {
-  event.preventDefault();
+function discernButton() {
   clickButtonAmsterdam();
   clickButtonMilan();
   clickCurrentPosition();
@@ -137,7 +135,11 @@ function setMilan(event) {
 ///current location button
 function clickCurrentPosition() {
   let currentPositionButton = document.querySelector("#set-here-button");
-  currentPositionButton.addEventListener("click", determineLocation);
+  currentPositionButton.addEventListener("click", preventRefresh);
+}
+function preventRefresh(event) {
+  event.preventDefault();
+  determineLocation();
 }
 /////// through search thing
 
@@ -178,19 +180,18 @@ function displayFarenheit(temp) {
 }
 //////current weather icons
 function displayCurrentIcon(response) {
-  let icon = response.data.weather[0].icon;
-  let iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+  let icon = response.data.weather[0].icon.substr(0, 2);
   let todayIcon = document.querySelector("#today-icon");
   let retrieveIconSet = {
-    "01d": 0,
-    "02d": 1,
-    "03d": 2,
-    "04d": 3,
-    "09d": 4,
-    "10d": 6,
-    "11d": 6,
-    "13d": 7,
-    "50d": 8,
+    "01": 0,
+    "02": 1,
+    "03": 2,
+    "04": 3,
+    "09": 4,
+    "10": 6,
+    "11": 6,
+    "13": 7,
+    "50": 8,
   };
   let iconRetrievalNumber = retrieveIconSet[icon];
 
@@ -205,5 +206,6 @@ function displayCurrentIcon(response) {
     `<i class="far fa-snowflake"></i>`,
     `<i class="fas fa-smog"></i>`,
   ];
+  console.log(response.data);
   todayIcon.innerHTML = iconSet[iconRetrievalNumber];
 }
