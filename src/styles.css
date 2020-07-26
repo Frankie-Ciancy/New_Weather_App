@@ -1,4 +1,5 @@
 body {
+  background-size: 100%;
   text-align: center;
   font-family: "Spinnaker", sans-serif;
   /* background: linear-gradient(to bottom, #d5dee7 0%, #e8ebf2 50%, #e2e7ed 100%), */
@@ -89,6 +90,11 @@ a:hover {
 .today-data {
   position: relative;
   right: 5px;
+}
+
+.signature {
+  font-family: monospace;
+  font-size: 14px;
 }
 .future-two-days,
 .weather-today {
