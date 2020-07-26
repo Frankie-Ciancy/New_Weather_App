@@ -33,6 +33,7 @@ function searchAPI(searchedCity) {
   axios.get(searchTodayUrl).then(displayCurrentHumidity);
   axios.get(searchTodayUrl).then(displayCurrentWind);
   axios.get(searchTodayUrl).then(chooseUnit);
+  axios.get(searchTodayUrl).then(displayCurrentIcon);
 }
 
 function displayCurrentTemp(response) {
@@ -174,4 +175,35 @@ function displayFarenheit(temp) {
     let tempInFarenheit = (temp * 9) / 5 + 32;
     todayTemp.innerHTML = `${tempInFarenheit}°F`;
   });
+}
+//////current weather icons
+function displayCurrentIcon(response) {
+  let icon = response.data.weather[0].icon;
+  let iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+  let todayIcon = document.querySelector("#today-icon");
+  let retrieveIconSet = {
+    "01d": 0,
+    "02d": 1,
+    "03d": 2,
+    "04d": 3,
+    "09d": 4,
+    "10d": 6,
+    "11d": 6,
+    "13d": 7,
+    "50d": 8,
+  };
+  let iconRetrievalNumber = retrieveIconSet[icon];
+
+  let iconSet = [
+    `<i class="fas fa-sun"></i>`,
+    `<i class="fas fa-cloud-sun"></i>`,
+    `<i class="fas fa-cloud"></i>`,
+    `<i class="fas fa-cloud"></i>`,
+    `<i class="fas fa-cloud-sun-rain"></i>`,
+    `<i class="fas fa-cloud-showers-heavy"></i>`,
+    `<i class="fas fa-bolt"></i>`,
+    `<i class="far fa-snowflake"></i>`,
+    `<i class="fas fa-smog"></i>`,
+  ];
+  todayIcon.innerHTML = iconSet[iconRetrievalNumber];
 }
