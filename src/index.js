@@ -63,11 +63,16 @@ function setTimeNow() {
     "Friday",
     "Saturday",
   ];
-  let getMinute = now.getMinutes();
+
+  let getMinutes = `${now.getMinutes()}`;
+  if (getMinutes.length < 2) {
+    getMinutes = `0${now.getMinutes()}`;
+  }
+
   let getHour = now.getHours();
   let getWeekDay = now.getDay();
   let weekDayNow = document.querySelector("#week-day-now");
-  weekDayNow.innerHTML = `${weekDays[getWeekDay]}, ${getHour}:${getMinute}`;
+  weekDayNow.innerHTML = `${weekDays[getWeekDay]}, ${getHour}:${getMinutes}`;
 }
 
 function setDateNow() {
@@ -286,8 +291,6 @@ function displayFuturePlusOne(months, getMonth, getDate, getYear) {
 function setCoordForFuture(response) {
   let longitude = response.data.coord.lon;
   let latitude = response.data.coord.lat;
-  console.log(latitude);
-  console.log(longitude);
   futureUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=current,hourly&appid=${apiKey}`;
   axios.get(futureUrl).then(setFutureIcons);
 }
