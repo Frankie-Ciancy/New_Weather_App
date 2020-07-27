@@ -17,6 +17,7 @@ function displayCurrentPosition(position) {
 function currentWeatherHere(longitude, latitude) {
   let weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
   axios.get(weatherUrl).then(displayHereWeather);
+  ///let futureweatherUrl
 }
 function displayHereWeather(position) {
   let currentCity = position.data.name;
@@ -34,6 +35,7 @@ function searchAPI(searchedCity) {
   axios.get(searchTodayUrl).then(displayCurrentWind);
   axios.get(searchTodayUrl).then(chooseUnit);
   axios.get(searchTodayUrl).then(displayCurrentIcon);
+  axios.get(searchTodayUrl).then(setCoordForFuture);
 }
 
 function displayCurrentTemp(response) {
@@ -183,37 +185,16 @@ function displayFarenheit(temp) {
 function displayCurrentIcon(response) {
   let icon = response.data.weather[0].icon.substr(0, 2);
   let todayIcon = document.querySelector("#today-icon");
-  let retrieveIconSet = {
-    "01": 0,
-    "02": 1,
-    "03": 2,
-    "04": 3,
-    "09": 4,
-    "10": 6,
-    "11": 6,
-    "13": 7,
-    "50": 8,
-  };
+
   let iconRetrievalNumber = retrieveIconSet[icon];
 
-  let iconSet = [
-    `<i class="fas fa-sun"></i>`,
-    `<i class="fas fa-cloud-sun"></i>`,
-    `<i class="fas fa-cloud"></i>`,
-    `<i class="fas fa-cloud"></i>`,
-    `<i class="fas fa-cloud-sun-rain"></i>`,
-    `<i class="fas fa-cloud-showers-heavy"></i>`,
-    `<i class="fas fa-bolt"></i>`,
-    `<i class="far fa-snowflake"></i>`,
-    `<i class="fas fa-smog"></i>`,
-  ];
   todayIcon.innerHTML = iconSet[iconRetrievalNumber];
 }
-///////// future icons
+///////// future days
 
-function checkMonth(months, getMonth, getDate, getYear, previousMonthDays) {
+function checkMonth(months, getMonth, getDate, getYear) {
   let monthName = months[getMonth];
-  let count = 0;
+
   let thirtyOneDaysMonths = {
     January: 0,
     March: 1,
@@ -306,5 +287,63 @@ function displayFuturePlusOne(months, getMonth, getDate, getYear) {
     futuredisplays[i].innerHTML = `${futuredate.month} ${futuredate.date}`;
   }
 }
+// future icons
+function setCoordForFuture(response) {
+  let longitude = response.data.coord.lon;
+  let latitude = response.data.coord.lat;
+  console.log(latitude);
+  console.log(longitude);
+  futureUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=current,hourly&appid=${apiKey}`;
+  axios.get(futureUrl).then(setFutureIcons);
+}
 
+function setFutureIcons(response) {
+  let oneDayMoreIcon = document.querySelector("#one-day-emoji");
+  let twoDaysMoreIcon = document.querySelector("#two-days-emoji");
+  let threeDaysMoreIcon = document.querySelector("#three-days-emoji");
+  let fourDaysMoreIcon = document.querySelector("#four-days-emoji");
+  let fiveDaysMoreIcon = document.querySelector("#five-days-emoji");
+  let sixDaysMoreIcon = document.querySelector("#six-days-emoji");
+
+  let futureIconCalls = [
+    oneDayMoreIcon,
+    twoDaysMoreIcon,
+    threeDaysMoreIcon,
+    fourDaysMoreIcon,
+    fiveDaysMoreIcon,
+    sixDaysMoreIcon,
+  ];
+
+  let i;
+
+  for (i = 0; i < 6; i++) {
+    let futureIcons = response.data.daily[i].weather[0].icon.substr(0, 2);
+    let futureIconRetrievalNumber = retrieveIconSet[futureIcons];
+    futureIconCalls[i].innerHTML = iconSet[futureIconRetrievalNumber];
+  }
+}
+
+////////////////////////////////////////////
+let iconSet = [
+  `<i class="fas fa-sun"></i>`,
+  `<i class="fas fa-cloud-sun"></i>`,
+  `<i class="fas fa-cloud"></i>`,
+  `<i class="fas fa-cloud"></i>`,
+  `<i class="fas fa-cloud-sun-rain"></i>`,
+  `<i class="fas fa-cloud-showers-heavy"></i>`,
+  `<i class="fas fa-bolt"></i>`,
+  `<i class="far fa-snowflake"></i>`,
+  `<i class="fas fa-smog"></i>`,
+];
+let retrieveIconSet = {
+  "01": 0,
+  "02": 1,
+  "03": 2,
+  "04": 3,
+  "09": 4,
+  "10": 6,
+  "11": 6,
+  "13": 7,
+  "50": 8,
+};
 setTodayData();
