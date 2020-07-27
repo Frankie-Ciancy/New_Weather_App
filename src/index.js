@@ -17,7 +17,6 @@ function displayCurrentPosition(position) {
 function currentWeatherHere(longitude, latitude) {
   let weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
   axios.get(weatherUrl).then(displayHereWeather);
-  ///let futureweatherUrl
 }
 function displayHereWeather(position) {
   let currentCity = position.data.name;
@@ -36,6 +35,7 @@ function searchAPI(searchedCity) {
   axios.get(searchTodayUrl).then(chooseUnit);
   axios.get(searchTodayUrl).then(displayCurrentIcon);
   axios.get(searchTodayUrl).then(setCoordForFuture);
+  axios.get(searchTodayUrl).then(displayDescription);
 }
 
 function displayCurrentTemp(response) {
@@ -45,12 +45,12 @@ function displayCurrentTemp(response) {
 function displayCurrentHumidity(response) {
   let humidity = Math.round(response.data.main.humidity);
   let humidityToday = document.querySelector("#humidity-today");
-  humidityToday.innerHTML = `${humidity}%`;
+  humidityToday.innerHTML = `Humidity: ${humidity}%`;
 }
 function displayCurrentWind(response) {
   let wind = Math.round(response.data.wind.speed);
   let windToday = document.querySelector("#wind-today");
-  windToday.innerHTML = `${wind} m/s`;
+  windToday.innerHTML = `Wind: ${wind} m/s`;
 }
 ///Time Right Now
 function setTimeNow() {
@@ -93,16 +93,6 @@ function setDateNow() {
   displayFuturePlusOne(months, getMonth, getDate, getYear);
   // checkMonth(monthName, getDate, getYear);
 }
-////definitions
-
-let now = new Date();
-let searchLine = document.querySelector(".form-control");
-let displayedCity = document.querySelector("#searched-city");
-let todayTemp = document.querySelector("#today-temp");
-let unitSwitch = document.querySelector("#unit-switch");
-let apiKey = "d0374efc7dd8f24099f54d563eb3c31c";
-
-///call functions
 
 ////////////////////////////////////////////////////////////////////////////////
 ////click buttons
@@ -173,7 +163,6 @@ function displayCelsius(temp) {
   });
 }
 function displayFarenheit(temp) {
-  // event.preventDefault();
   let farenheitLink = document.querySelector("#farenheit-link");
   farenheitLink.addEventListener("click", function (event) {
     event.preventDefault();
@@ -189,6 +178,12 @@ function displayCurrentIcon(response) {
   let iconRetrievalNumber = retrieveIconSet[icon];
 
   todayIcon.innerHTML = iconSet[iconRetrievalNumber];
+}
+///////describe current weather
+
+function displayDescription(response) {
+  let description = document.querySelector("#description");
+  description.innerHTML = `${response.data.weather[0].description} <br />`;
 }
 ///////// future days
 
@@ -323,7 +318,14 @@ function setFutureIcons(response) {
   }
 }
 
-////////////////////////////////////////////
+////definitions
+
+let now = new Date();
+let searchLine = document.querySelector(".form-control");
+let displayedCity = document.querySelector("#searched-city");
+let todayTemp = document.querySelector("#today-temp");
+let unitSwitch = document.querySelector("#unit-switch");
+let apiKey = "d0374efc7dd8f24099f54d563eb3c31c";
 let iconSet = [
   `<i class="fas fa-sun"></i>`,
   `<i class="fas fa-cloud-sun"></i>`,
